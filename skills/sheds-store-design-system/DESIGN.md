@@ -4,6 +4,9 @@ description: Shed marketplace. Industrial signage on cream paper - condensed cap
 colors:
   primary: "#D4AA75"
   primary-dark: "#8a7354"
+  on-primary: "#222222"
+  focus-ring: "#004627"
+  focus-ring-dark: "#D4AA75"
   secondary: "#004627"
   secondary-dark: "#234737"
   background: "#fafafa"
@@ -75,6 +78,10 @@ There are four surfaces:
 3. **City and variant pages**: editorial landing pages with a dark forest hero, gold highlights, and Georgia serif section headings.
 4. **Auth** (auth.sheds.store): no site header or footer. A forest green brand panel with an illustration on the left, a white form column on the right.
 
+## Logo
+
+A green barn with a white tree in its doorway, on a curved green hill, over a "SHEDS.STORE" wordmark. The roof and wordmark are brown `#6e4716` and the barn is green `#45843b`. On dark or green backgrounds the roof and wordmark turn white. The files are in `assets/brand/`: `logo.svg`, `logo-on-dark.svg`, `mark.svg` (barn only) and the favicon set. Always use the files. Never retype the name in Oswald as a wordmark. The logo colours aren't UI colours.
+
 ## Colors
 
 - **Forest green `#004627`** is the action and link colour, and the dashboard primary button.
@@ -114,8 +121,8 @@ Flat by default. Cards use a 1px hairline border (`#e9e3d8` in the dashboard) an
 
 ## Components
 
-- **Button, primary (marketplace):** pill, 46px high, 28px horizontal padding, 14px semibold text, tan fill with white text. Brightens on hover.
-- **Button, outline (marketplace):** 2px tan border, tan text, fills tan on hover.
+- **Button, primary (marketplace):** pill, 46px high, 28px horizontal padding, 14px semibold text, tan fill with near-black `#222` text (7.4:1). The live site uses white text, which is only 2.1:1, so don't copy it. Brightens on hover.
+- **Button, outline (marketplace):** 2px tan border, `#9a6b2f` text (tan text fails on white), fills tan on hover.
 - **Button, on photo:** white 60% border and white text, 15% white fill on hover.
 - **Button (dashboard):** pill, 13.5px bold. Variants: green primary, white outline (ink border on hover), black, gold. Compact size available.
 - **Card (dashboard):** white surface, warm hairline border, 14px radius, Oswald title, muted subtitle.
@@ -131,7 +138,7 @@ Flat by default. Cards use a 1px hairline border (`#e9e3d8` in the dashboard) an
 - **Shed card, listing page:** white, 16px corners, warm hairline border, deeper shadow on hover. 4:3 photo with a dark photo-count pill. Oswald capital title on one line, dealer in muted text, cash price in green Oswald 24px beside a rent-to-own monthly figure, then tag pills. A star rating and the dealer logo sit under a hairline. Sponsored cards get a warm tint and a tan border.
 - **Shed card, home page:** unframed. A square photo carousel with rounded corners, status badges top left, a contact button bottom right, then the title, address, phone, cash "OR" monthly price, and feature pills.
 - **Tag pill (listing):** 11px bold. Cream by default. Green tint for savings, blue for used, yellow for pending, red tint for sold, solid red for hot, green tint for popular.
-- **Status badge (home):** 11px uppercase on a solid colour, 6px corners. Green for a discount, amber for used, yellow for pending, red for sold.
+- **Status badge (home):** 12px uppercase on a solid colour, 6px corners. Dark green `#15803d` with white text for a discount. Amber and yellow with near-black text for used and pending. Red for sold.
 - **Filter panel (listing):** a cream rounded panel with an Oswald "FILTERS" title, letter-spaced capital group labels, green range sliders and square checkboxes.
 - **Plan card (sell a shed):** white, rounded, with a tan eyebrow, an Oswald name and a very large Oswald price. The featured plan is forest green with white text.
 - **Auth frame:** a green brand panel with a white logo tile, an Oswald capital title and an illustration card. The form column has an Oswald "SIGN IN", labelled inputs and a full-width tan pill.
@@ -141,8 +148,12 @@ Flat by default. Cards use a 1px hairline border (`#e9e3d8` in the dashboard) an
 
 - Do use condensed capitals for display headings and plain sentence case for everything smaller.
 - Do keep green for actions and tan for brand moments.
-- Do check every new screen in dark mode and at phone width.
-- Don't put tan text on cream.
+- Do check every new screen in light and dark mode and at phone width.
+- Do meet WCAG 2.2 AA: 4.5:1 for text, 3:1 for borders, icons and focus rings, in both themes. Placeholders and input units need their own dark-mode colour.
+- Do show a visible focus ring on every control: forest green in light mode, tan in dark mode.
+- Do make touch targets at least 24px, carousel dots included.
+- Don't put tan text on cream or white, or white text on tan.
+- Don't use white text on mid green `#16a34a` or amber `#f59e0b`.
 - Don't add new fonts, gradients, or glassmorphism.
 - Don't use square-cornered buttons.
 

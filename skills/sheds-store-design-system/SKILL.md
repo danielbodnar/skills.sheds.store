@@ -30,6 +30,34 @@ Some pages keep their styles in a scoped `<style>` block in the `.astro` file, f
 
 Industrial and outdoors: warehouse signage over a cream, paper-like background. Condensed capitals for display headings, a plain humanist sans for reading, one deep forest green for actions and links, and a warm tan/gold as the brand accent.
 
+## Logo and favicons
+
+Use the real logo. Never type "SHEDS.STORE" in Oswald as a stand-in wordmark, and never redraw the barn.
+
+| File in this skill | What it is | Use on |
+| --- | --- | --- |
+| `assets/brand/logo.svg` | Barn mark over the wordmark, brown `#6e4716` and green `#45843b`, 161×92 | White, cream and other light backgrounds |
+| `assets/brand/logo-on-dark.svg` | Same, with the roof and wordmark white | The green footer, dark mode, photos |
+| `assets/brand/mark.svg` | Barn mark only, 161×67 | Tight spaces: app chrome, avatars, loaders |
+| `assets/brand/favicon.ico` | 16, 32 and 48px | `rel="icon"` |
+| `assets/brand/favicon-32.png`, `favicon-192.png` | PNG icons | `rel="icon"` with `sizes` |
+| `assets/brand/apple-touch-icon.png` | 180×180, opaque | `rel="apple-touch-icon"` |
+
+The site serves the same files from `public/`: `/favicon.ico`, `/favicon-32.png`, `/favicon-192.png`, `/apple-touch-icon.png`, and the header and footer logos as `/images/logo.png` and `/images/footer_logo.png`. The vector logo is `public/images/favicon.svg` (the name is misleading: it's the full logo, not an icon). Inside the repo, link the `public/` paths. Copy from this skill only for work outside the repo, such as a prototype or artifact.
+
+The head tags `base.astro` uses, which a stand-alone page should repeat:
+
+```html
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+
+- The logo links home and has `alt="Sheds.Store"`. Don't add "logo" to the alt text.
+- Show it at 53.5px high in the header (`config.site.logo_height`), with its width following. Never stretch it.
+- Brown `#6e4716` and green `#45843b` belong to the logo. They aren't UI colours, so don't use them for buttons or text.
+
 ## Colour
 
 Use the Tailwind names. Every colour needs its `dark:` counterpart.
@@ -51,6 +79,24 @@ Use the Tailwind names. Every colour needs its `dark:` counterpart.
 There's also a green ramp as CSS variables, `--green-900` (`#004627`) down to `--green-30` (`#f4f9ed`), in `base.scss`.
 
 Tan on cream is low-contrast. Don't set body-size text in `#D4AA75` on a light background. Use the green, `--gold-700` (`#8a5d1d`) on city pages, `--sb-accent` (`#9a6b2f`) on the listing page, or `$auth-link` (`#a9783a`) on auth pages.
+
+### Contrast
+
+Text needs 4.5:1 against its background (3:1 at 24px, or 19px bold). Borders, focus rings and icons need 3:1. These are the pairs that come up, measured:
+
+| Pair | Ratio | Use |
+| --- | --- | --- |
+| White on tan `#d4aa75` | 2.1:1 | **Fails.** The live site's tan buttons do this. Don't copy it. |
+| `#222` (`text-dark`) on tan | 7.4:1 | Text on any tan fill: buttons, the search cap, pills |
+| Tan text on white | 2.1:1 | **Fails.** Use `--sb-accent` `#9a6b2f` (4.7:1) or `--gold-700` `#8a5d1d` (5.7:1) |
+| White on forest green `#004627` | 11:1 | Hero and footer text, green buttons |
+| White on `bg-green-600` | 3.3:1 | **Fails** at badge size. Use `bg-green-700` (5.0:1). |
+| White on `bg-amber-500` | 2.2:1 | **Fails.** Use `text-dark` on amber (7.4:1) |
+| White at 40–50% opacity on dark green cards | 2.7–3.4:1 | **Fails.** Use `text-white/80` or more |
+| Forest green focus ring on a dark card | 1.2:1 | **Invisible.** Use a tan ring in dark mode (6.1:1) |
+| Placeholder `#6b7280` on a dark input | 2.3:1 | **Fails.** Give placeholders and input affixes (`$`, `%`) their own `dark:` colour, for example `dark:placeholder:text-text-dark/70` |
+
+Dark-mode pairs fail more often than light ones, because a `dark:` variant is easy to leave out. Check both themes.
 
 Dark mode is off for visitors. `.dark` goes on `<html>` only when `localStorage.theme` is `"dark"`, and the `<ThemeToggle />` in the header is commented out. There's no `prefers-color-scheme` fallback. Keep writing the `dark:` pairs anyway, so the toggle can come back without a restyle.
 
@@ -95,8 +141,8 @@ Pill shaped, 46px high, 14px semibold:
 
 | Class | Use |
 | --- | --- |
-| `btn btn-primary` | Main action. Tan fill, white text. |
-| `btn btn-outline-primary` | Secondary action. 2px tan border, tan text. |
+| `btn btn-primary` | Main action. Tan fill. The class sets white text, which fails contrast (2.1:1), so new work adds `text-dark` (7.4:1). |
+| `btn btn-outline-primary` | Secondary action. 2px tan border. Tan text fails on white, so use `text-sb-accent` (4.7:1). |
 | `btn btn-white` | On a light card. |
 | `btn btn-outline-white` | On a dark or photo background. |
 | `btn-sm` | Compact modifier, 38px. |
@@ -130,7 +176,7 @@ Section titles on the home page are Oswald caps, centred, with a short two-part 
 
 There are two. Don't mix their parts.
 
-| | Listing card (`/sheds`) | Featured card (home) |
+| Part | Listing card (`/sheds`) | Featured card (home) |
 | --- | --- | --- |
 | Source | `.sb-card` in `sheds-browse.scss`, `shed_card_item.vue` | `home_featured_sheds.astro` |
 | Frame | White, 1px `--sb-line` border, 16px radius, deeper shadow on hover | No frame. `rounded-xl` photo, text below |
@@ -138,7 +184,7 @@ There are two. Don't mix their parts.
 | Title | `.sb-card__title`, Oswald caps 17px, one line | Oswald caps |
 | Price | `.sb-price`, Oswald 700 24px, green; cash on the left, rent-to-own split by a hairline | Cash "OR" monthly, with "+ Tax" under each |
 | Tags | `.sb-tag` pills (below) | `ShedFeatureBadges` pills |
-| Status | `.sb-tag--used`, `--pending`, `--sold` | `rounded-md` 11px uppercase labels: `bg-green-600` "$X off", `bg-amber-500` used, `bg-yellow-500` pending, `bg-red-500` sold |
+| Status | `.sb-tag--used`, `--pending`, `--sold` | `rounded-md` 11px uppercase labels: `bg-green-600` "$X off", `bg-amber-500` used, `bg-yellow-500` pending, `bg-red-500` sold. White text on the green and amber fails contrast; new badges use `bg-green-700` with white, and amber or yellow with `text-dark`. |
 
 `.sb-card--sponsored` marks paid placement: a `#fdf6ea` tint and a tan border.
 
@@ -191,17 +237,38 @@ They load `_city-tokens.scss`: a tan ramp (`--tan-*`), amber (`--amber-*`), a da
 ## Layout
 
 - Page width: `.container` (centred, `max-w-[1302px] px-3`). Vertical rhythm: `.section` (`py-16`).
-- Grid: `tailwind-bootstrap-grid` is installed (`row`, `col-*`), and plain Tailwind grid/flex works too. Prefer Tailwind grid with `minmax` for new work.
-- Breakpoints: `sm 576`, `md 768`, `lg 992`, `xl 1200`, `2xl 1400`, `3xl 1600`.
+- Grid: `tailwind-bootstrap-grid` is installed (`row`, `col-*`), and plain Tailwind grid/flex works too. For a new grid, prefer one that wraps by itself, `grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))]`, over a column count per breakpoint.
+- Breakpoints: `sm 576`, `md 768`, `lg 992`, `xl 1200`, `2xl 1400`, `3xl 1600`. They're fine where the surrounding page already uses them. A port can keep its `sm:`/`md:` classes. Don't rewrite them in the same MR.
 - Forms get `@tailwindcss/forms` base styles. Select carets are drawn in `_city-tokens.scss`; don't override `background` on a `select`.
 - Icons are inline SVG with `stroke="currentColor"`, in `src/components/icons/`. A FontAwesome 3 webfont still ships in the CSS. Don't use it for new icons.
+
+## Accessibility
+
+Target WCAG 2.2 AA. The rules that sheds.store work most often breaks:
+
+- **Contrast**, in both themes. See the table above.
+- **Text colour**: the component's root sets its own colour (`text-text dark:text-text-dark`) rather than inheriting `body`. A host page or an artifact wrapper can set a body colour that turns inherited text black on dark.
+- **Focus**: every control shows `focus-visible:outline-2 focus-visible:outline-offset-2` in a colour with 3:1 against its surroundings. That's `outline-secondary` in light mode and `dark:outline-primary` in dark. On a forest green surface (heroes, the footer, the auth panel) a green ring disappears, so use `outline-white` there. Never remove an outline without replacing it.
+- **Labels**: every input has a `<label for>`. Placeholders are examples, not labels. Hints go in an element named by `aria-describedby`. Group related inputs in a `<fieldset>` with a `<legend>`.
+- **Input affixes** such as `$` and `%` get `aria-hidden="true"`, and the label says the unit ("Monthly rent ($)"), so screen readers don't hear a bare "dollar".
+- **Results that update** as someone types go in one `aria-live="polite"` region holding the summary sentence, not on every figure.
+- **Charts**: wrap the SVG in a `<figure>` with a `<figcaption>` that states the takeaway, give it `role="img"` and an `aria-label`, and offer the numbers as a `<table>` with a `<caption>` and `<th scope>`. Never use colour alone to tell series apart; vary the dash pattern or add a label.
+- **Touch targets** are at least 24×24px, including carousel dots and close buttons.
+- **Structure**: one `<h1>`, headings in order with no skipped levels, and content inside `<header>`, `<main>` and `<footer>`. `base.astro` provides the landmarks. A stand-alone page needs `<html lang="en">` and its own landmarks.
+- **Motion**: anything that pulses or slides (such as `cta-pulse`) stops under `prefers-reduced-motion: reduce`.
+- **Text size**: 12px is the smallest. The 11px tags and chart ticks should be 12px in new work.
+
+Run `scripts/a11y-audit.ts` from the `sheds-store-frontend` skill (see its "Checks") on the page in light and dark. Then tab through it with the keyboard. axe catches about a third of real problems, so a clean run isn't the end of the check.
 
 ## Checklist for a new component
 
 - Uses theme colours, not raw hex, apart from the documented CSS variables.
 - Has `dark:` variants (marketplace) or uses `--dash-*` (dashboard).
+- Passes contrast in light and dark, including placeholders, affixes and focus rings.
 - Uses `text-h*` / `text-base` rather than fixed `text-[18px]` sizes.
-- Buttons are `.btn-*` or `.dash-btn--*`.
+- Buttons are `.btn-*` or `.dash-btn--*`, with `text-dark` on any tan fill.
+- Uses the real logo files, never a typed wordmark.
+- Every control has a label, a visible focus ring and a 24px target.
 - Looks right at 375px wide and in dark mode.
 
 ## Screenshots

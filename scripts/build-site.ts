@@ -213,8 +213,13 @@ await writeFile(
     .replace("{{COUNT}}", String(skills.length)),
 );
 
-// Shared assets for every page.
+// Shared assets for every page. The favicons and logo come from the design-system
+// skill, so the site and the skill can't drift apart.
 for (const asset of ["style.css", "site.js"]) await writeFile(join(out, asset), await readFile(join(root, "site", asset)));
+const brand = "skills/sheds-store-design-system/assets/brand";
+for (const asset of ["favicon.ico", "favicon-32.png", "favicon-192.png", "apple-touch-icon.png", "logo-on-dark.svg"]) {
+  await writeFile(join(out, asset), new Uint8Array(await $`git -C ${root} show HEAD:${brand}/${asset}`.quiet().arrayBuffer()));
+}
 
 // Skill pages at /skills/<name>/: a file tree, a viewer with rendered Markdown
 // and source, and every file of the skill served raw beside the page, so
@@ -263,10 +268,17 @@ for (const s of skills) {
       continue;
     }
     const text = new TextDecoder().decode(bytes);
+    // Code blocks scroll sideways when they're wide, so they take focus:
+    // keyboard users then scroll them with the arrow keys (WCAG 2.1.1).
     const rendered = path.endsWith(".md")
-      ? `<div class="rendered">${Bun.markdown.html(text.replace(/^---\n[\s\S]*?\n---\n/, ""))}</div>`
+      ? `<div class="rendered">${Bun.markdown.html(text.replace(/^---\n[\s\S]*?\n---\n/, ""))
+          .replaceAll("<pre>", '<pre tabindex="0">')
+          // A "- [ ]" checklist in a doc is a list, not a form. Disabled, unlabeled
+          // checkboxes would be announced as nine dead controls, so draw the box instead.
+          .replace(/<input type="checkbox" class="task-list-item-checkbox"( checked)? disabled>/g, (_, on) =>
+            `<span class="task-box${on ? " done" : ""}" aria-hidden="true"></span>`)}</div>`
       : "";
-    panes.push(`<div ${attr}>${rendered}<div class="source"><pre><code>${escape(text)}</code></pre></div></div>`);
+    panes.push(`<div ${attr}>${rendered}<div class="source"><pre tabindex="0"><code>${escape(text)}</code></pre></div></div>`);
   }
   const others = skills
     .filter((o) => o.name !== s.name)

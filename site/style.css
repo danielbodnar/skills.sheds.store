@@ -4,7 +4,7 @@
     --secondary: #004627; --secondary-dark: #234737;
     --body-bg: #fafafa; --surface: #ffffff; --panel: #f4eadc; --hairline: #e9e3d8;
     --text: #272727; --heading: #222222; --muted: #5f5e5a; --code-bg: #f1efe8;
-    --link: var(--secondary); --tab-active-bg: var(--secondary); --tab-active-text: #ffffff;
+    --link: var(--secondary); --focus: var(--secondary); --tab-active-bg: var(--secondary); --tab-active-text: #ffffff;
     --footer-bg: #004627; --footer-text: #cbcbcb; --footer-title: #ebebeb;
     --shadow: 0 1px 2px rgba(29, 28, 25, 0.04);
     --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -17,7 +17,7 @@
     :root {
       --body-bg: #2a2b2c; --surface: #393b3d; --panel: #2f3133; --hairline: #4a4c4e;
       --text: #fdfaf7; --heading: #fffffc; --muted: #ceced0; --code-bg: #242526;
-      --link: var(--primary-bright); --tab-active-bg: var(--primary); --tab-active-text: #222222;
+      --link: var(--primary-bright); --focus: var(--primary); --tab-active-bg: var(--primary); --tab-active-text: #222222;
       --footer-bg: #234737; --shadow: none;
     }
   }
@@ -43,7 +43,7 @@
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .button { display: inline-flex; align-items: center; min-height: 46px; padding: 0 28px; border-radius: 9999px;
             font: 600 0.875rem/1 var(--font-body); text-decoration: none; transition: filter 0.15s, background 0.15s; }
-  .button.primary { background: var(--primary); color: #ffffff; border: 2px solid var(--primary); }
+  .button.primary { background: var(--primary); color: #222222; border: 2px solid var(--primary); }
   .button.primary:hover { filter: brightness(1.08); }
   .button.on-green { color: #ffffff; border: 2px solid rgba(255, 255, 255, 0.6); }
   .button.on-green:hover { background: rgba(255, 255, 255, 0.15); }
@@ -62,8 +62,20 @@
                  border-radius: 9999px; padding: 0.6rem 1.1rem; cursor: pointer; }
   [role="tab"]:hover { border-color: var(--primary); }
   [role="tab"][aria-selected="true"] { background: var(--tab-active-bg); border-color: var(--tab-active-bg); color: var(--tab-active-text); }
-  [role="tab"]:focus-visible, summary:focus-visible, .copy:focus-visible, .button:focus-visible, .toggle:focus-visible {
-    outline: 2px solid var(--primary); outline-offset: 2px; }
+  .task-list-item { list-style: none; }
+  .task-box { display: inline-block; inline-size: 0.9em; block-size: 0.9em; margin-inline: -1.4em 0.5em;
+              vertical-align: -0.1em; border: 2px solid var(--muted); border-radius: 0.2em; }
+  .task-box.done { background: var(--secondary); border-color: var(--secondary); }
+
+  /* The logo at the header height sheds.store uses (config.site.logo_height). */
+  .brand { display: inline-block; margin-block-end: 0.75rem; }
+  .brand img { display: block; block-size: 3.35rem; inline-size: auto; }
+
+  /* Green in light mode, tan in dark: tan on white is 2.1:1, below the 3:1 a focus ring needs. */
+  a:focus-visible, [role="tab"]:focus-visible, summary:focus-visible, .copy:focus-visible, .button:focus-visible,
+  .toggle:focus-visible, .view-toggle button:focus-visible, pre[tabindex]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  /* The header is forest green in both themes, where a green ring vanishes. White is 11:1. */
+  header :is(a, button, .button, [tabindex]):focus-visible { outline-color: #ffffff; }
   .no-js [role="tablist"] { display: none; }
   .js [role="tabpanel"][hidden] { display: none; }
   [role="tabpanel"] > :first-child { margin-top: 0; }

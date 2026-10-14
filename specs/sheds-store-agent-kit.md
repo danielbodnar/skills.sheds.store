@@ -139,3 +139,8 @@ Workers, routes and DNS for the Cloudflare account. Now in sheds.store-new `docs
 - 2026-10-13 [todo] Port the React pricing calculators once their source is available.
 - 2026-10-13 [done] MR !1 merged into `main`.
 - 2026-10-13 [changed] The plugin is being made publishable. Account IDs, secrets mapping, the Maybach contract and the repo map move to sheds.store-new `docs/agents/`. See [public-plugin.md](public-plugin.md).
+- 2026-10-14 [done] Logos and favicons in the design system (`assets/brand/`): vector logo, an on-dark variant, the barn mark, and the favicon set. skills.sheds.store uses them.
+- 2026-10-14 [done] Accessibility pass using Chrome's modern-web-guidance guides and axe-core (WCAG 2.2 AA) in light and dark. Measured contrast pairs and rules went into the design-system skill. New work uses `#222` text on tan buttons, because white on tan is 2.1:1. `sheds-store-frontend` ships `scripts/a11y-audit.ts`. skills.sheds.store passes on every page in both themes.
+- 2026-10-14 [done] Skill fixes from the SpaceFit port (sheds.store-new !62): working local preview (`wrangler dev`, since `astro preview` isn't supported), the build-time Supabase variables, real data only in shipped code, per-visitor data through `/api` routes, where engine and component-local helpers go, and commit an outside port unchanged first.
+- 2026-10-14 [todo] sheds.store-new MR with the same contrast, focus-ring and touch-target fixes for the live site.
+- 2026-10-14 [todo] Make the a11y audit a CI job. It needs `playwright-core` (Socket quality 79) and `axe-core` (license 70, MPL-2.0) as dev dependencies, which needs a decision first.

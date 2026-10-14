@@ -29,6 +29,12 @@ EOF
 
 Pass the description inline with a quoted heredoc, as above. Don't write it to a file in the repo.
 
+Recent pnpm releases don't run dependency build scripts on install. They report `ERR_PNPM_IGNORED_BUILDS` for `esbuild`, `workerd` and `sharp`. That's expected. `pnpm build` and `wrangler dev` still work, so carry on. Don't approve the builds or change the pnpm settings in your MR.
+
+### Bringing in code from outside the repo
+
+For a prototype, an artifact or another person's code, commit it unchanged first ("chore: add <thing> as delivered"), and make the integration a second commit. Reviewers then see your real changes as one diff instead of a wall of new files.
+
 - **Branch from `develop`, target `develop`.** `main` is protected. Maintainers merge `develop` into `main` to release.
 - Branch names: `feat/<thing>`, `fix/<thing>`, `refactor/<thing>`, `docs/<thing>`, `chore/<thing>`.
 - Commit and MR titles: Conventional Commits, lower case after the type. `feat: …`, `fix: …`, `refactor: …`, `docs: …`, `chore: …`. A scope is optional (`feat(city-pages): …`).
@@ -39,7 +45,9 @@ Pass the description inline with a quoted heredoc, as above. Don't write it to a
 ## Before you push
 
 - [ ] The build passes.
-- [ ] You loaded the page in `pnpm preview` (or `pnpm dev`) at phone width and in dark mode.
+- [ ] You loaded the page in `pnpm dev`, or in `pnpm exec wrangler dev --local` after a build, at phone width and in light and dark mode. (`astro preview` doesn't work with the Cloudflare adapter.)
+- [ ] The accessibility audit in `sheds-store-frontend` passes in both themes, and you tabbed through the page.
+- [ ] No sample listings, dealers or prices, and no calls to routes that don't exist.
 - [ ] No React, JSX, or new UI library in the diff (`git diff develop --stat`, then search for `react`).
 - [ ] New `auth/` or `dashboard/` pages are in `siteUrls.ts`.
 - [ ] New server secrets are declared in `env.schema` and listed in `.env.example` (name only).

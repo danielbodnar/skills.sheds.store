@@ -8,11 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body class="no-js">
 <header>
   <div class="intro">
+    <a class="brand" href="https://sheds.store"><img src="/logo-on-dark.svg" alt="Sheds.Store" width="93" height="54"></a>
     <ol class="crumbs">
       <li><a href="/">skills.sheds.store</a></li>
       <li><a href="/#skills-title">skills</a></li>
@@ -27,7 +32,7 @@
   </div>
 </header>
 
-<div class="skill-layout">
+<main class="skill-layout">
   <nav class="pane tree" aria-label="Files in {{NAME}}">
 {{TREE}}
   </nav>
@@ -83,7 +88,7 @@
       </ul>
     </section>
   </aside>
-</div>
+</main>
 
 <footer><strong>sheds.store agent plugin</strong> · <a href="/">skills.sheds.store</a> · <a href="/SHA256SUMS">SHA256SUMS</a> · built from <code>{{COMMIT}}</code></footer>
 <script src="/site.js"></script>
