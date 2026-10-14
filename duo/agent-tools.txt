@@ -1,0 +1,44 @@
+# Built-in tools for the "sheds.store engineer" Duo custom agent.
+# One name per line. duo/create-agent.sh maps them to IDs.
+
+# Read the code
+read_file
+read_files
+find_files
+grep
+list_dir
+list_repository_tree
+get_repository_file
+get_repository_files
+gitlab_blob_search
+get_project
+gitlab_documentation_search
+
+# Issues and MRs
+get_issue
+list_issue_notes
+create_issue_note
+get_merge_request
+list_merge_request_diffs
+list_all_merge_request_notes
+create_merge_request_note
+create_merge_request_diff_note
+
+# Pipelines
+get_pipeline_errors
+get_job_logs
+
+# Make changes on a branch and open an MR
+create_branch
+create_file_with_contents
+edit_file
+create_commit
+create_merge_request
+
+# Planning
+create_plan
+get_plan
+add_new_task
+set_task_status
+update_task_description
+remove_task

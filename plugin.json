@@ -1,0 +1,18 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "sheds-store",
+  "version": "0.1.0",
+  "description": "Skills, rules and MCP servers for building sheds.store (Astro + Vue 3 islands + Tailwind + Supabase on Cloudflare Workers) and shipping merge requests to the davidbodnar GitLab repos.",
+  "author": { "name": "sheds.store" },
+  "license": "LicenseRef-Proprietary",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "sheds.store",
+        "shortDescription": "Build sheds.store the way it's built",
+        "developerName": "sheds.store",
+        "category": "Coding"
+      }
+    }
+  }
+}

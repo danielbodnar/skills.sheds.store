@@ -1,0 +1,17 @@
+{
+  "name": "sheds-store",
+  "version": "0.1.0",
+  "description": "sheds.store skills, rules and MCP servers",
+  "contextFileName": "AGENTS.md",
+  "mcpServers": {
+    "cloudflare-docs": {
+      "httpUrl": "https://docs.mcp.cloudflare.com/mcp"
+    },
+    "astro-docs": {
+      "httpUrl": "https://mcp.docs.astro.build/mcp"
+    },
+    "bun-docs": {
+      "httpUrl": "https://bun.com/docs/mcp"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "sheds-store",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "sheds.store agent plugin: skills, rules and MCP servers",
+  "keywords": [
+    "pi-package"
+  ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  },
+  "scripts": {
+    "validate": "bun scripts/validate.ts",
+    "site:build": "bun scripts/build-site.ts",
+    "site:deploy": "wrangler deploy --config site/wrangler.jsonc"
+  }
+}

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{NAME}} · sheds.store skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="no-js">
+<header>
+  <div class="intro">
+    <ol class="crumbs">
+      <li><a href="/">skills.sheds.store</a></li>
+      <li><a href="/#skills-title">skills</a></li>
+      <li>{{NAME}}</li>
+    </ol>
+    <h1 class="skill-title">{{NAME}}</h1>
+    <p>{{SUMMARY}}</p>
+  </div>
+  <div class="actions">
+    <a class="button primary" href="/downloads/{{NAME}}.skill" download>Download .skill</a>
+    <a class="button on-green" href="/">All skills</a>
+  </div>
+</header>
+
+<div class="skill-layout">
+  <nav class="pane tree" aria-label="Files in {{NAME}}">
+{{TREE}}
+  </nav>
+
+  <section class="pane viewer" aria-label="File viewer">
+    <div class="viewer-bar">
+      <span class="viewer-path">/SKILL.md</span>
+      <span class="view-toggle" role="group" aria-label="View">
+        <button type="button" data-view="rendered" aria-pressed="true">Rendered</button>
+        <button type="button" data-view="source" aria-pressed="false">Source</button>
+      </span>
+    </div>
+{{FILES}}
+  </section>
+
+  <aside class="rail">
+    <section class="pane install-tabs" aria-labelledby="install-title">
+      <h2 id="install-title">Install</h2>
+      <div role="tablist" aria-label="Install as">
+        <button role="tab" id="tab-cmd" aria-controls="panel-cmd" aria-selected="true">Command</button>
+        <button role="tab" id="tab-prompt" aria-controls="panel-prompt" aria-selected="false" tabindex="-1">Prompt</button>
+      </div>
+      <div role="tabpanel" id="panel-cmd" aria-labelledby="tab-cmd">
+        <div class="cmd"><pre><code>bunx skills@latest add {{BASE}} --skill {{NAME}}</code></pre></div>
+        <p class="note">Add <code>-g</code> to install it for your user instead of this repo.</p>
+      </div>
+      <div role="tabpanel" id="panel-prompt" aria-labelledby="tab-prompt" hidden>
+        <div class="cmd"><pre><code>Install the {{NAME}} skill from {{BASE}} and use it for this task.</code></pre></div>
+        <p class="note">For an agent that can run commands or fetch URLs.</p>
+      </div>
+    </section>
+
+    <section class="pane" aria-labelledby="details-title">
+      <h2 id="details-title">Details</h2>
+      <dl>
+        <dt>Files</dt><dd>{{FILE_COUNT}}</dd>
+        <dt>.skill</dt><dd><a href="/downloads/{{NAME}}.skill" download>{{NAME}}.skill</a></dd>
+        <dt>sha256</dt><dd><code>{{SKILL_SHA}}</code></dd>
+        <dt>Archive</dt><dd><a href="/.well-known/agent-skills/{{NAME}}.tar.gz">{{NAME}}.tar.gz</a></dd>
+        <dt>Commit</dt><dd><code>{{COMMIT}}</code></dd>
+      </dl>
+    </section>
+
+    <section class="pane" aria-labelledby="desc-title">
+      <h2 id="desc-title">When agents use it</h2>
+      <p class="note">{{DESCRIPTION}}</p>
+    </section>
+
+    <section class="pane" aria-labelledby="others-title">
+      <h2 id="others-title">Other skills</h2>
+      <ul class="others">
+{{OTHERS}}
+      </ul>
+    </section>
+  </aside>
+</div>
+
+<footer><strong>sheds.store agent plugin</strong> · <a href="/">skills.sheds.store</a> · <a href="/SHA256SUMS">SHA256SUMS</a> · built from <code>{{COMMIT}}</code></footer>
+<script src="/site.js"></script>
+</body>
+</html>

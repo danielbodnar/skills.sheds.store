@@ -1,0 +1,11 @@
+[MD013]
+enabled = false
+
+[per-file-ignores]
+"agents/*.md" = ["MD041"]
+"duo/system-prompt.md" = ["MD041"]
+"templates/AGENTS.md" = ["MD041"]
+"templates/maybach/AGENTS.md" = ["MD041", "MD057"]
+
+[MD033]
+allowed-elements = ["details", "summary", "img", "br", "picture", "source", "kbd", "sup", "sub"]

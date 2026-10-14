@@ -1,0 +1,14 @@
+{
+  "name": "sheds-store",
+  "owner": {
+    "name": "sheds.store"
+  },
+  "description": "The sheds.store agent kit plus the upstream vendor plugins it builds on, pinned by commit.",
+  "plugins": [
+    {
+      "name": "sheds-store",
+      "source": "./",
+      "description": "sheds.store skills, rules and MCP servers. Install this one first."
+    }
+  ]
+}

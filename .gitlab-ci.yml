@@ -1,0 +1,129 @@
+# SAST customization: https://docs.gitlab.com/user/application_security/sast/#available-cicd-variables
+# Secret Detection customization: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure/
+#
+# validate  every pipeline   skill frontmatter, manifests, MCP config, check-public
+# package   every pipeline   .skill files, plugin zip, marketplace, site; kept as artifacts
+# deploy    default branch   publishes site/dist to https://skills.sheds.store
+# mirror    default branch   pushes main and tags to the GitHub repo claude.ai syncs from
+# release   v* tags          GitLab release with the packages as assets
+stages:
+- test
+- package
+- deploy
+- release
+- secret-detection
+
+variables:
+  BUN_IMAGE: oven/bun:1.4.3-alpine
+  SECRET_DETECTION_ENABLED: 'true'
+
+validate:
+  stage: test
+  image: $BUN_IMAGE
+  before_script:
+    - apk add --no-cache git
+  script:
+    - bun scripts/validate.ts --no-claude
+
+package:
+  stage: package
+  image: $BUN_IMAGE
+  needs: [validate]
+  variables:
+    MARKETPLACE_REPO: danielbodnar/skills.sheds.store
+  before_script:
+    - apk add --no-cache git
+  script:
+    - bun scripts/build-site.ts
+  artifacts:
+    name: sheds-store-$CI_COMMIT_SHORT_SHA
+    expose_as: packages
+    paths:
+      - site/dist/
+    expire_in: 30 days
+
+# Needs CI/CD variables CLOUDFLARE_API_TOKEN (masked, protected; Workers Scripts
+# and Workers Routes edit on the account and zone) and CLOUDFLARE_ACCOUNT_ID.
+# The job is skipped until the token exists.
+deploy:
+  stage: deploy
+  image: node:24.21.0-alpine
+  needs: [package]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CLOUDFLARE_API_TOKEN
+  environment:
+    name: production
+    url: https://skills.sheds.store
+  script:
+    - npx --yes wrangler@4.147.0 deploy --config site/wrangler.jsonc
+
+# Publishes the default branch to github.com/danielbodnar/skills.sheds.store,
+# which claude.ai syncs its marketplace from. It pushes snapshots, not history:
+# each run commits this pipeline's file tree on top of GitHub's main, so commits
+# from before the public/private split never leave GitLab. GITHUB_MIRROR_SSH_KEY
+# is a masked, protected variable holding the base64 private half of a write
+# deploy key on that repo, and nothing else.
+mirror:
+  stage: deploy
+  image: alpine:3.24.2
+  resource_group: github-mirror
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $GITHUB_MIRROR_SSH_KEY
+  variables:
+    GITHUB_REMOTE: git@github.com:danielbodnar/skills.sheds.store.git
+    GIT_AUTHOR_NAME: sheds.store
+    GIT_AUTHOR_EMAIL: ""
+    GIT_COMMITTER_NAME: sheds.store
+    GIT_COMMITTER_EMAIL: ""
+    GITHUB_HOST_KEYS: |
+      github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+      github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+      github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+  script:
+    - apk add --no-cache git openssh-client
+    - install -d -m 700 ~/.ssh
+    - printf '%s' "$GITHUB_MIRROR_SSH_KEY" | base64 -d > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+    - printf '%s' "$GITHUB_HOST_KEYS" > ~/.ssh/known_hosts
+    - |
+      # A snapshot always lands on GitHub's current main, so a retried or late
+      # pipeline would publish an older tree. Only the tip of main publishes.
+      tip=$(git ls-remote "$CI_REPOSITORY_URL" "refs/heads/$CI_DEFAULT_BRANCH" | cut -f1)
+      if [ "$tip" != "$CI_COMMIT_SHA" ]; then
+        echo "$CI_COMMIT_SHORT_SHA is no longer the tip of $CI_DEFAULT_BRANCH; skipping"; exit 0
+      fi
+      tree=$(git rev-parse "HEAD^{tree}")
+      parent=""
+      # An empty repo has no main yet; the first snapshot becomes the root commit.
+      if git ls-remote --exit-code "$GITHUB_REMOTE" refs/heads/main >/dev/null; then
+        git fetch --depth=1 "$GITHUB_REMOTE" main:refs/github/main
+        if [ "$(git rev-parse 'refs/github/main^{tree}')" = "$tree" ]; then
+          echo "GitHub main already has this tree"; exit 0
+        fi
+        parent="-p refs/github/main"
+      fi
+      commit=$(printf 'Publish %s\n' "$CI_COMMIT_SHORT_SHA" | git commit-tree "$tree" $parent)
+      git push "$GITHUB_REMOTE" "$commit:refs/heads/main"
+
+release:
+  stage: release
+  image:
+    name: registry.gitlab.com/gitlab-org/cli:v1.119.0
+    entrypoint: [""]
+  needs: [package]
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\./
+  variables:
+    GLAB_ENABLE_CI_AUTOLOGIN: "true"
+  script:
+    - >
+      glab release create "$CI_COMMIT_TAG" --ref "$CI_COMMIT_SHA" --use-package-registry --package-name sheds-store
+      --notes "Install from https://skills.sheds.store, or upload these files: sheds-store.zip under Customize > Plugins, a .skill file under Customize > Skills."
+      site/dist/plugins/sheds-store.zip site/dist/downloads/*.skill site/dist/SHA256SUMS
+
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
+- template: Security/Secret-Detection.gitlab-ci.yml
+secret_detection:
+  stage: secret-detection

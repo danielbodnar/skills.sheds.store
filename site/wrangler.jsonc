@@ -1,0 +1,27 @@
+// Static site for https://skills.sheds.store: install page, marketplace and
+// downloadable packages. Build with `bun run site:build`, then
+// `bun run site:deploy`. The account comes from CLOUDFLARE_ACCOUNT_ID.
+{
+  "name": "sheds-store-skills",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  // The main site's `*.sheds.store/*` route would otherwise win, so a more
+  // specific route pins this hostname to this Worker.
+  "routes": [
+    { "pattern": "skills.sheds.store", "custom_domain": true },
+    { "pattern": "skills.sheds.store/*", "zone_name": "sheds.store" }
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "invocation_logs": true },
+    "traces": { "enabled": true },
+    "issues": { "enabled": true }
+  },
+  "logpush": true
+}

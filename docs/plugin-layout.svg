@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">How the sheds.store agent plugin is laid out</title>
+  <desc id="d">The plugin repo holds skills, agents, MCP config and manifests, and CI builds the packages served at skills.sheds.store. Coding agents install it through their own manifest or the skills CLI. The private sheds.store-new repo holds the details the skills point to, under docs/agents.</desc>
+  <style>
+    .bg { fill: #fafafa; }
+    .panel { fill: #ffffff; stroke: #ceced0; stroke-width: 1.5; }
+    .panel-private { fill: #ffffff; stroke: #004627; stroke-width: 2; }
+    .item { fill: #f1f1f1; stroke: none; }
+    .secret { fill: #f3d9b7; stroke: #d4aa75; stroke-width: 1.5; }
+    .h { fill: #222222; font-size: 15px; font-weight: 700; }
+    .sub { fill: #5c5c5c; font-size: 12px; }
+    .name { fill: #272727; font-size: 13px; font-weight: 600; }
+    .note { fill: #5c5c5c; font-size: 11.5px; }
+    .label { fill: #004627; font-size: 11.5px; font-weight: 600; }
+    .wire { fill: none; stroke: #004627; stroke-width: 1.75; }
+    .dash { stroke-dasharray: 6 5; }
+    .head { fill: #004627; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #2a2b2c; }
+      .panel, .panel-private { fill: #393b3d; }
+      .panel { stroke: #5a5c5e; }
+      .panel-private { stroke: #d4aa75; }
+      .item { fill: #2a2b2c; }
+      .secret { fill: #8a7354; stroke: #d4aa75; }
+      .h, .name { fill: #fdfaf7; }
+      .sub, .note { fill: #ceced0; }
+      .label { fill: #f3d9b7; }
+      .wire { stroke: #f3d9b7; }
+      .head { fill: #f3d9b7; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="head" d="M0 0 L10 5 L0 10 z"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="960" height="540" rx="12"/>
+
+  <!-- Plugin repo -->
+  <rect class="panel" x="20" y="70" width="260" height="420" rx="10"/>
+  <text class="h" x="36" y="98">sheds.store/skills</text>
+  <text class="sub" x="36" y="116">this plugin · public</text>
+  <rect class="item" x="36" y="134" width="228" height="56" rx="6"/>
+  <text class="name" x="48" y="158">skills/</text>
+  <text class="note" x="48" y="178">stack, design, platform, data, MRs</text>
+  <rect class="item" x="36" y="200" width="228" height="56" rx="6"/>
+  <text class="name" x="48" y="224">agents/</text>
+  <text class="note" x="48" y="244">sheds-store-engineer, docs-writer</text>
+  <rect class="item" x="36" y="266" width="228" height="56" rx="6"/>
+  <text class="name" x="48" y="290">.mcp.json · mcp.json</text>
+  <text class="note" x="48" y="310">Astro, Bun and Cloudflare docs</text>
+  <rect class="item" x="36" y="332" width="228" height="56" rx="6"/>
+  <text class="name" x="48" y="356">manifests</text>
+  <text class="note" x="48" y="376">.claude-plugin/, plugin.json, gemini, pi</text>
+  <rect class="item" x="36" y="398" width="228" height="56" rx="6"/>
+  <text class="name" x="48" y="422">CI: package and deploy</text>
+  <text class="note" x="48" y="442">.skill, plugin zip, skills.sheds.store</text>
+
+  <!-- Coding agents -->
+  <rect class="panel" x="350" y="70" width="260" height="420" rx="10"/>
+  <text class="h" x="366" y="98">Coding agents</text>
+  <text class="sub" x="366" y="116">install the plugin</text>
+  <rect class="item" x="366" y="134" width="228" height="56" rx="6"/>
+  <text class="name" x="378" y="158">Claude Code · claude.ai</text>
+  <text class="note" x="378" y="178">read .claude-plugin/</text>
+  <rect class="item" x="366" y="200" width="228" height="56" rx="6"/>
+  <text class="name" x="378" y="224">Codex · VS Code · Copilot</text>
+  <text class="note" x="378" y="244">read plugin.json (Agent Plugins)</text>
+  <rect class="item" x="366" y="266" width="228" height="56" rx="6"/>
+  <text class="name" x="378" y="290">Gemini CLI · pi · omp</text>
+  <text class="note" x="378" y="310">their own manifests</text>
+  <rect class="item" x="366" y="332" width="228" height="56" rx="6"/>
+  <text class="name" x="378" y="356">Duo · OpenCode · Zed</text>
+  <text class="note" x="378" y="376">bunx skills add skills.sheds.store</text>
+  <rect class="item" x="366" y="398" width="228" height="56" rx="6"/>
+  <text class="name" x="378" y="422">Duo custom agent</text>
+  <text class="note" x="378" y="442">"sheds.store engineer" in Chat</text>
+
+  <!-- sheds.store-new -->
+  <rect class="panel-private" x="680" y="70" width="260" height="420" rx="10"/>
+  <text class="h" x="696" y="98">sheds.store-new</text>
+  <text class="sub" x="696" y="116">the app · private</text>
+  <rect class="secret" x="696" y="134" width="228" height="56" rx="6"/>
+  <text class="name" x="708" y="158">docs/agents/</text>
+  <text class="note" x="708" y="178">accounts, secrets, Maybach, repos</text>
+  <rect class="item" x="696" y="200" width="228" height="56" rx="6"/>
+  <text class="name" x="708" y="224">CLAUDE.md · AGENTS.md</text>
+  <text class="note" x="708" y="244">the repo's own rules, read first</text>
+  <rect class="item" x="696" y="266" width="228" height="56" rx="6"/>
+  <text class="name" x="708" y="290">src/</text>
+  <text class="note" x="708" y="310">the Astro app</text>
+  <rect class="item" x="696" y="332" width="228" height="56" rx="6"/>
+  <text class="name" x="708" y="356">.mcp.json</text>
+  <text class="note" x="708" y="376">project-scoped MCP servers</text>
+  <rect class="item" x="696" y="398" width="228" height="56" rx="6"/>
+  <text class="name" x="708" y="422">.claude/settings.json</text>
+  <text class="note" x="708" y="442">plugin installed with --scope project</text>
+
+  <!-- install -->
+  <path class="wire" d="M264 360 H346" marker-end="url(#arrow)"/>
+  <text class="label" x="307" y="352" text-anchor="middle">install</text>
+
+
+  <!-- skills point at private docs -->
+  <path class="wire dash" d="M240 134 V52 H900 V130" marker-end="url(#arrow)"/>
+  <text class="label" x="570" y="44" text-anchor="middle">skills say: read docs/agents/ in your clone</text>
+</svg>

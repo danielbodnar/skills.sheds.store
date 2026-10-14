@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Docs"
+  short_description: "Write clear, accurate, natural project docs"
+  default_prompt: "Use -store-writing-docs to revise this documentation for accuracy, clarity, and natural prose."

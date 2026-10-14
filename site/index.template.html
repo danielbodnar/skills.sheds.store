@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>sheds.store agent plugin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="no-js">
+<header>
+  <div class="intro">
+    <h1>sheds.store agent plugin</h1>
+    <p>Teaches coding agents how sheds.store is built: Astro with Vue islands, Tailwind and Supabase on one Cloudflare Worker.</p>
+    <ul class="stats">
+      <li>{{COUNT}} skills</li>
+      <li>2 agents</li>
+      <li>MCP servers</li>
+      <li>Claude, Codex, Copilot, Duo, Gemini, pi</li>
+    </ul>
+  </div>
+  <div class="actions">
+    <a class="button primary" href="{{BASE}}/plugins/sheds-store.zip" download>Download plugin (.zip)</a>
+    <a class="button on-green" href="{{BASE}}/marketplace.json">marketplace.json</a>
+  </div>
+</header>
+
+<main>
+  <section class="pane install" aria-labelledby="install-title">
+    <h2 id="install-title">Install</h2>
+    <div role="tablist" aria-label="Install method">
+      <button role="tab" id="tab-claude-code" aria-controls="panel-claude-code" aria-selected="true">Claude Code</button>
+      <button role="tab" id="tab-upload" aria-controls="panel-upload" aria-selected="false" tabindex="-1">claude.ai and Cowork</button>
+      <button role="tab" id="tab-agents" aria-controls="panel-agents" aria-selected="false" tabindex="-1">Other agents</button>
+      <button role="tab" id="tab-vendor" aria-controls="panel-vendor" aria-selected="false" tabindex="-1">Vendor plugins</button>
+    </div>
+
+    <div role="tabpanel" id="panel-claude-code" aria-labelledby="tab-claude-code">
+      <p>Add the marketplace once for your account, then install the plugin for yourself or for everyone in a repo:</p>
+      <div class="cmd"><pre><code>claude plugin marketplace add {{BASE}}/marketplace.json
+claude plugin install sheds-store@sheds-store</code></pre></div>
+      <div class="cmd"><pre><code>claude plugin install sheds-store@sheds-store --scope project</code></pre></div>
+      <p class="note">User scope is the default. <code>--scope project</code> writes <code>.claude/settings.json</code> in the repo, so everyone who opens it gets the plugin. In a session, the same commands work as <code>/plugin …</code>.</p>
+    </div>
+
+    <div role="tabpanel" id="panel-upload" aria-labelledby="tab-upload" hidden>
+      <p>For claude.ai, Claude Desktop and Cowork:</p>
+      <ul>
+{{REPO_STEP}}
+        <li>The whole plugin: <a href="{{BASE}}/plugins/sheds-store.zip" download><code>sheds-store.zip</code></a>, uploaded under <strong>Customize &gt; Plugins</strong>.</li>
+        <li>One skill: its <code>.skill</code> file from the list on the right, uploaded under <strong>Customize &gt; Skills</strong>.</li>
+      </ul>
+      <p class="note">Checksums for every file are in <a href="{{BASE}}/SHA256SUMS"><code>SHA256SUMS</code></a>.</p>
+    </div>
+
+    <div role="tabpanel" id="panel-agents" aria-labelledby="tab-agents" hidden>
+      <p>GitLab Duo, Codex, Copilot, OpenCode, Zed, pi, and anything else that reads <code>.agents/skills</code>. In a repo, or for your user with <code>-g</code>:</p>
+      <div class="cmd"><pre><code>bunx skills@latest add {{BASE}} --all</code></pre></div>
+      <div class="cmd"><pre><code>bunx skills@latest add {{BASE}} --all -g</code></pre></div>
+      <p class="note">Codex, Copilot CLI, VS Code, Gemini CLI, pi and oh-my-pi can also install the plugin from its git repo. The <a href="https://github.com/danielbodnar/skills.sheds.store#install">README</a> has the commands.</p>
+    </div>
+
+    <div role="tabpanel" id="panel-vendor" aria-labelledby="tab-vendor" hidden>
+      <p>sheds.store work also uses vendors' own plugins. Install them from their own sources, so nobody ends up with two plugins of the same name:</p>
+      <div class="cmd"><pre><code>/plugin install cloudflare@claude-plugins-official
+/plugin install supabase@claude-plugins-official
+/plugin install gitlab@claude-plugins-official
+/plugin install resend@claude-plugins-official</code></pre></div>
+      <p class="note">Vue: <code>/plugin marketplace add vuejs-ai/skills</code>. 1Password: <code>/plugin marketplace add 1Password/1password-claude-plugin</code>. Google Maps: <code>bunx skills@latest add googlemaps/agent-skills</code>. GitLab CLI skills: <code>glab skills install</code>.</p>
+    </div>
+
+    <div class="rules">
+      <strong>Every agent follows these rules.</strong> No React: interactive UI is a Vue Options API component mounted as an Astro island, styled with Tailwind and the theme tokens. Reuse the pricing helpers. Branch from <code>develop</code> and open the MR into <code>develop</code> with a Conventional Commit title. Agents open MRs; they don't merge, deploy or set production secrets.
+    </div>
+  </section>
+
+  <section class="pane skills" aria-labelledby="skills-title">
+    <div class="skills-head">
+      <h2 id="skills-title">Skills</h2>
+      <button type="button" class="toggle" data-open="false">Expand all</button>
+    </div>
+    <div class="skills-head">
+      <p>Start with <code>sheds-store</code>; it routes to the rest. Account, secret and integration details live in the private sheds.store-new repo under <code>docs/agents/</code>, and each skill says which file to read in your clone.</p>
+    </div>
+{{SKILL_ITEMS}}
+  </section>
+</main>
+
+<footer><strong>sheds.store agent plugin</strong> · <a href="https://sheds.store">sheds.store</a> · <a href="{{BASE}}/SHA256SUMS">SHA256SUMS</a> · built from <code>{{COMMIT}}</code> · plugin sha256 <code>{{ZIP_SHA}}</code></footer>
+
+<script src="/site.js"></script>
+</body>
+</html>

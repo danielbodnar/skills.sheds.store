@@ -1,0 +1,10 @@
+{
+  "name": "sheds-store",
+  "displayName": "sheds.store",
+  "description": "Skills, rules and MCP servers for building sheds.store (Astro + Vue 3 islands + Tailwind + Supabase on Cloudflare Workers) and shipping merge requests to the davidbodnar GitLab repos.",
+  "author": { "name": "sheds.store" },
+  "homepage": "https://gitlab.com/davidbodnar/sheds.store/skills",
+  "repository": "https://gitlab.com/davidbodnar/sheds.store/skills",
+  "license": "LicenseRef-Proprietary",
+  "keywords": ["sheds.store", "astro", "vue", "tailwind", "supabase", "cloudflare-workers", "gitlab"]
+}
