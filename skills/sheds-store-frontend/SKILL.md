@@ -154,6 +154,8 @@ A quick prototype (a claude.ai artifact, a single HTML file, a demo for review) 
 
 `darkMode: "class"`. Every colour class needs its `dark:` pair, for example `bg-body dark:bg-theme-dark text-text dark:text-text-dark`. See `sheds-store-design-system`.
 
+In a scoped `<style>` block, write the dark rule as `:global(.dark .my-card)`, not `:global(.dark) .my-card`. The second form compiles to a bare `.dark { … }`: it restyles `<html>`, and the card never changes.
+
 ## Accessibility
 
 Follow "Accessibility" in `sheds-store-design-system`: contrast in both themes, labels on every input, visible focus, 24px targets, charts with a figure caption and a data table, one polite live region for results that update. Use native elements (`<button>`, `<details>`, `<dialog>`, `<table>`) before ARIA.

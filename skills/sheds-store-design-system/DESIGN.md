@@ -121,7 +121,7 @@ Flat by default. Cards use a 1px hairline border (`#e9e3d8` in the dashboard) an
 
 ## Components
 
-- **Button, primary (marketplace):** pill, 46px high, 28px horizontal padding, 14px semibold text, tan fill with near-black `#222` text (7.4:1). The live site uses white text, which is only 2.1:1, so don't copy it. Brightens on hover.
+- **Button, primary (marketplace):** pill, 46px high, 28px horizontal padding, 14px semibold text, tan `#D4AA75` fill with near-black `#222` text (7.4:1), the same in dark mode. The live site uses white text, which is only 2.1:1, so don't copy it. Brightens on hover.
 - **Button, outline (marketplace):** 2px tan border, `#9a6b2f` text (tan text fails on white), fills tan on hover.
 - **Button, on photo:** white 60% border and white text, 15% white fill on hover.
 - **Button (dashboard):** pill, 13.5px bold. Variants: green primary, white outline (ink border on hover), black, gold. Compact size available.

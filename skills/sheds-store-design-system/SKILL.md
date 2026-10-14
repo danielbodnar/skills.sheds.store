@@ -69,7 +69,7 @@ Use the Tailwind names. Every colour needs its `dark:` counterpart.
 | Body text | `#272727` | `#fdfaf7` | `text-text dark:text-text-dark` |
 | Long-form text | `#17252A` | `#fffffc` | `text-content dark:text-content-dark` |
 | Headings | `#222` | `#fdfaf7` | `text-dark dark:text-text-dark` |
-| Brand accent (tan) | `#D4AA75` | `#8a7354` | `bg-primary dark:bg-primary-dark` |
+| Brand accent (tan) | `#D4AA75` | `#8a7354` for surfaces; buttons keep `#D4AA75` | `bg-primary dark:bg-primary-dark` (not on buttons) |
 | Brand accent, bright on dark | | `#f3d9b7` | `dark:text-primary-bright-dark` |
 | Brand green (actions, links) | `#004627` | `#234737` | `bg-secondary dark:bg-secondary-dark` |
 | Border | `#cbcbcb` | | `border-border` |
@@ -88,6 +88,7 @@ Text needs 4.5:1 against its background (3:1 at 24px, or 19px bold). Borders, fo
 | --- | --- | --- |
 | White on tan `#d4aa75` | 2.1:1 | **Fails.** The live site's tan buttons do this. Don't copy it. |
 | `#222` (`text-dark`) on tan | 7.4:1 | Text on any tan fill: buttons, the search cap, pills |
+| `#222` on dark tan `#8a7354` (`primary-dark`) | 3.5:1 | **Fails.** A tan button keeps the `#d4aa75` fill in dark mode too, so leave out `dark:bg-primary-dark` |
 | Tan text on white | 2.1:1 | **Fails.** Use `--sb-accent` `#9a6b2f` (4.7:1) or `--gold-700` `#8a5d1d` (5.7:1) |
 | White on forest green `#004627` | 11:1 | Hero and footer text, green buttons |
 | White on `bg-green-600` | 3.3:1 | **Fails** at badge size. Use `bg-green-700` (5.0:1). |
@@ -141,7 +142,7 @@ Pill shaped, 46px high, 14px semibold:
 
 | Class | Use |
 | --- | --- |
-| `btn btn-primary` | Main action. Tan fill. The class sets white text, which fails contrast (2.1:1), so new work adds `text-dark` (7.4:1). |
+| `btn btn-primary` | Main action. Tan fill. The class sets white text, which fails contrast (2.1:1), so new work adds `text-dark` (7.4:1) and keeps the same fill in dark mode. |
 | `btn btn-outline-primary` | Secondary action. 2px tan border. Tan text fails on white, so use `text-sb-accent` (4.7:1). |
 | `btn btn-white` | On a light card. |
 | `btn btn-outline-white` | On a dark or photo background. |

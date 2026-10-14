@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 /**
  * Run axe-core (WCAG 2.2 A and AA rules) against pages in headless Chromium,
- * once with prefers-color-scheme: light and once with dark.
+ * once in light and once in dark. Each pass sets prefers-color-scheme and
+ * localStorage.theme, which is what sheds.store reads.
  *
  * Usage:
  *   bun <skill dir>/scripts/a11y-audit.ts <url>... [--serve <dir>] [--json <file>]
@@ -68,6 +69,11 @@ for (const arg of args) {
   const url = base && arg.startsWith("/") ? base + arg : arg;
   for (const scheme of ["light", "dark"] as const) {
     const page = await browser.newPage({ colorScheme: scheme, viewport: { width: 1440, height: 1000 } });
+    // sheds.store ignores prefers-color-scheme: it adds .dark only when
+    // localStorage.theme is "dark". Set both, before any page script runs.
+    await page.addInitScript((theme: string) => {
+      try { localStorage.setItem("theme", theme); } catch {}
+    }, scheme);
     await page.goto(url, { waitUntil: "networkidle" });
     await page.addScriptTag({ content: axeSource });
     const result = await page.evaluate(() =>
