@@ -16,6 +16,8 @@
  *                                           and the skill's files served raw beside it
  *   style.css, site.js                      shared by every page
  *   SHA256SUMS                              checksums for every download
+ *   llms.txt, llms-full.txt                 Markdown index for agents (llmstxt.org), and every
+ *                                           SKILL.md inlined in one file
  *
  * Env: MARKETPLACE_REPO, the GitHub repo (owner/repo) for the claude.ai "Add from a
  * repository" step. The step is left out when it isn't set.
@@ -127,6 +129,57 @@ catalog.plugins = catalog.plugins.map((p: { name: string; source: unknown }) =>
 );
 await writeFile(join(out, "marketplace.json"), `${JSON.stringify(catalog, null, 2)}\n`);
 await writeFile(join(out, "SHA256SUMS"), `${sums.sort((a, b) => a.slice(66).localeCompare(b.slice(66))).join("\n")}\n`);
+
+// llms.txt (https://llmstxt.org): a Markdown index of the site for agents. Skill
+// links point at the raw SKILL.md served beside each skill page, not the HTML.
+// llms-full.txt inlines every SKILL.md, frontmatter removed, for one-fetch reads.
+const llms = `# sheds.store skills
+
+> Agent skills, rules and MCP config for building sheds.store, the shed marketplace at https://sheds.store: Astro on one Cloudflare Worker, Vue islands, Tailwind and Supabase. It installs as the \`sheds-store\` plugin (Claude Code, claude.ai, Codex, VS Code, Copilot, Gemini) or skill by skill with the skills CLI.
+
+Start with the \`sheds-store\` skill. It covers the product and the stack, and says which skill to load next.
+
+Install for Claude Code:
+
+\`\`\`sh
+claude plugin marketplace add ${base}/marketplace.json
+claude plugin install sheds-store@sheds-store
+\`\`\`
+
+Install for any agent the skills CLI supports:
+
+\`\`\`sh
+bunx skills@latest add ${base} --all
+\`\`\`
+
+Account IDs, secret locations and the Maybach integration details aren't published here. They're in the sheds.store-new repo under \`docs/agents/\`, and the skills say which file to read.
+
+## Skills
+
+${skills.map((s) => `- [${s.name}](${base}/skills/${s.name}/SKILL.md): ${s.description}`).join("\n")}
+
+## Install files
+
+- [marketplace.json](${base}/marketplace.json): Claude Code marketplace, with the plugin as a checksummed archive
+- [Skills discovery index](${base}/.well-known/agent-skills/index.json): what \`skills add\` reads
+- [sheds-store.zip](${base}/plugins/sheds-store.zip): the whole plugin, for claude.ai Customize > Plugins
+
+## Optional
+
+- [llms-full.txt](${base}/llms-full.txt): every SKILL.md in one file
+- [SHA256SUMS](${base}/SHA256SUMS): checksums for every download
+`;
+await writeFile(join(out, "llms.txt"), llms);
+const full = await Promise.all(
+  skills.map(async (s) => {
+    const body = (await $`git -C ${root} show HEAD:skills/${s.name}/SKILL.md`.text()).replace(/^---\n[\s\S]*?\n---\n/, "");
+    return `<skill name="${s.name}" source="${base}/skills/${s.name}/SKILL.md">\n\n> ${s.description}\n${body.trimEnd()}\n\n</skill>`;
+  }),
+);
+await writeFile(
+  join(out, "llms-full.txt"),
+  `# sheds.store skills: full text\n\n> Every SKILL.md from ${base}, built from ${(await $`git -C ${root} rev-parse --short HEAD`.text()).trim()}. Files a skill references (references/, assets/) are linked, not inlined: fetch them from the skill's source URL.\n\n${full.join("\n\n")}\n`,
+);
 
 // Landing page.
 const commit = (await $`git -C ${root} rev-parse --short HEAD`.text()).trim();
